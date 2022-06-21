@@ -3,6 +3,10 @@ uuid = "d919e4c8-d081-4515-b7bc-d85d3f44c99c"
 authors = ["Lilith Hafner <Lilith.Hafner@gmail.com> and contributors"]
 version = "0.0.0"
 
+[deps]
+BasicTextRender = "c69498db-0706-4865-8aa9-71281a0ffe91"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+
 [compat]
 julia = "1.6"
 
