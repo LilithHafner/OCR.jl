@@ -1,8 +1,9 @@
 module OCR
 
-using Images, BasicTextRender, StatsBase, Random
+using Images, StatsBase
 
-export training_data, overlay
+using BasicTextRender: overlaytext!
+using Random: shuffle
 
 function training_data(n=512, font_size=10)
     n1 = n + ceil(Int, (1 + ℯ) * font_size)
