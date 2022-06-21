@@ -1,6 +1,6 @@
 module OCR
 
-using Images, BasicTextRender
+using Images, BasicTextRender, StatsBase
 
 export training_data, overlay
 
@@ -67,7 +67,40 @@ function overlay(image, marks)
     out
 end
 
-# test with
-# img, lab, dist = training_data(512); OCR.overlay(img, dist .== 0)
+function test_data()
+    img, lab, dist = training_data(512); OCR.overlay(img, dist .== 0)
+end
+
+weights(shape) = map(randn, shape[1:end-1], shape[2:end])
+
+function forward(weights, x)
+    history = similar(weights, typeof(x))
+    for i in eachindex(weights)
+        history[i] = x
+        x = max.(0, x * weights[i])
+    end
+    x, history
+end
+
+function backward!(weights, history, grad)
+    for i in reverse(eachindex(weights, history))
+        weights[i] += transpose(history[i]) * grad
+        grad = grad * transpose(weights[i])
+        grad[history[i] .== 0] .= 0
+    end
+    grad # gradient with respect to input
+end
+
+function test_network()
+    input = rand(17, 5)
+    target = rand(17, 5)
+    network = weights([5, 15, 15, 5])
+    for i in 1:10000
+        prediction, history = forward(network, input)
+        grad = .0001(target .- prediction)
+        isinteger(log2(i)) && println(mean((target .- prediction).^2))
+        backward!(network, history, grad)
+    end
+end
 
 end # module

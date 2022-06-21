@@ -6,6 +6,7 @@ version = "0.0.0"
 [deps]
 BasicTextRender = "c69498db-0706-4865-8aa9-71281a0ffe91"
 Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
 julia = "1.6"
