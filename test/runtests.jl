@@ -4,5 +4,5 @@ using Test
 @testset "OCR.jl" begin
     OCR.test_data()
     OCR.test_network()
-    OCR.test_train(2)
+    println(OCR.test_all(5; show_img=false))
 end

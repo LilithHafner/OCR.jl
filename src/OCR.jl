@@ -157,7 +157,7 @@ function train(epochs)
 
     end
 
-    v_img, apply(network; img=v_img, window, window_length, batch_size)
+    network, (;window, window_length, batch_size)
 end
 
 function apply(network; img, window, window_length, batch_size)
@@ -195,9 +195,47 @@ function peaks(img)
     out
 end
 
-function test_train(epochs)
-    img, output = train(epochs)
-    overlay(img, peaks(blur(blur(output))))
+function make_system(network, params)
+    function f(img)
+        apply(network; img, params...) |>
+        blur |>
+        blur |>
+        peaks |>
+        findall
+    end
+end
+
+standard_training_data = training_data(256)
+function test_system(system, source=standard_training_data; show_img=true)
+    img, _, dists = source
+    guess = system(img)
+    show_img && display(overlay(img, guess))
+
+    truth = findall(dists .== 0)
+    evaluate(guess, truth)
+end
+
+function evaluate(guess, truth, proximity=(a,b)->sum((Tuple(a).-Tuple(b)).^2), threshold=5^2)
+    hits = fill(0, axes(truth)...)
+    false_positive = 0
+    for g in guess
+        i, t = argmin(((i, t),) -> proximity(g, t), enumerate(truth))
+        dist = proximity(g, t)
+        if dist <= threshold
+            hits[i] += 1
+        else
+            false_positive += 1
+        end
+    end
+    undetected = sum(hits .== 0)
+    doublecount = sum(max.(0, hits .- 2))
+    map(x -> x/length(truth), (;undetected, false_positive, doublecount))
+end
+
+function test_all(epochs; show_img=true)
+    time = @elapsed system = make_system(train(epochs)...)
+    out = (;time, test_system(system; show_img)...)
+    map(x->round(1000x)/1000, out)
 end
 
 end # module
