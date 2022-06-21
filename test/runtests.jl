@@ -2,5 +2,7 @@ using OCR
 using Test
 
 @testset "OCR.jl" begin
-    # Write your tests here.
+    OCR.test_data()
+    OCR.test_network()
+    OCR.test_train(2)
 end
