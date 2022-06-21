@@ -134,25 +134,13 @@ function train(epochs)
     window = (7,4)
     window_length = prod(window .* 2 .+ 1)
 
-    v_img, _, v_dist = training_data(256)
-
-    _t = (1 ./ (2 .+ v_dist))
-    println("0 baseline: $(mean(_t .^ 2))")
-    println("const baseline: $(var(_t))")
-
-    v_coords = vec(margin(eachindex(IndexCartesian(), v_img), window...))
-
     network = weights([window_length, 200, 100, 50, 10, 1]) * .1
     batch_size = 200
 
     for _ in 1:epochs
-        
-        print(epoch(network; coords=v_coords, img=v_img, dist=v_dist, window, batch_size=3batch_size, window_length, train=false))
-
-        print('\t')
 
         img, _, dist = training_data(256)
-        coords = shuffle(vec(margin(eachindex(IndexCartesian(), v_img), window...)))
+        coords = shuffle(vec(margin(eachindex(IndexCartesian(), img), window...)))
         println(epoch(network; coords, img, dist, window, batch_size, window_length, train=true))
 
     end
