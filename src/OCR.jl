@@ -216,7 +216,7 @@ function evaluate(guess, truth, proximity=(a,b)->sum((Tuple(a).-Tuple(b)).^2), t
         end
     end
     undetected = sum(hits .== 0)
-    doublecount = sum(max.(0, hits .- 2))
+    doublecount = sum(max.(0, hits .- 1))
     map(x -> x/length(truth), (;undetected, false_positive, doublecount))
 end
 
