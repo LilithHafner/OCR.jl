@@ -134,7 +134,7 @@ function train(epochs)
     window = (7,4)
     window_length = prod(window .* 2 .+ 1)
 
-    network = weights([window_length, 200, 100, 50, 10, 1]) * .1
+    network = weights([window_length, 200, 70, 1]) * .05
     batch_size = 200
 
     for _ in 1:epochs
