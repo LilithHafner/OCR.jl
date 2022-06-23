@@ -122,7 +122,7 @@ function epoch(network; coords, img, dist, window, train, window_length, batch_s
 
         prediction, history = forward(network, input)
         push!(loss, mean((target .- prediction).^2))
-        push!(live, mean(hcat(history...) .> 0))
+        push!(live, mean(hcat(history[begin+1:end]...) .> 0))
 
         if train
             grad = 1e-3(target .- prediction)
@@ -137,7 +137,7 @@ function train(epochs)
     window_length = prod(window .* 2 .+ 1)
 
     network = weights([window_length, 200, 70, 1]) * .05
-    batch_size = 200
+    batch_size = 50
 
     for _ in 1:epochs
 
