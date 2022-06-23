@@ -193,8 +193,7 @@ function make_system(network, params)
     end
 end
 
-standard_training_data = training_data(256)
-function test_system(system, source=standard_training_data; show_img=true)
+function test_system(system, source=training_data(256); show_img=true)
     img, _, dists = source
     guess = system(img)
     show_img && display(overlay(img, guess))
