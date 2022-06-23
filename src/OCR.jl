@@ -125,7 +125,7 @@ function epoch(network; coords, img, dist, window, train, window_length, batch_s
         push!(live, mean(hcat(history[begin+1:end]...) .> 0))
 
         if train
-            grad = 1e-3(target .- prediction)
+            grad = 3e-3(target .- prediction)
             backward!(network, history, grad)
         end
     end
@@ -177,7 +177,7 @@ function blur(img)
 end
 
 function peaks(img)
-    out = img .> quantile(vec(img), .8)
+    out = img .> quantile(vec(img), .75)
     out[begin+1:end, :] .&= img[begin+1:end, :] .>= img[begin:end-1, :]
     out[begin:end-1, :] .&= img[begin:end-1, :] .> img[begin+1:end, :]
     out[:, begin+1:end] .&= img[:, begin+1:end] .>= img[:, begin:end-1]
