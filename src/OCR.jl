@@ -5,6 +5,8 @@ using Images, StatsBase
 using BasicTextRender: overlaytext!
 using Random: shuffle
 
+export test_all, overlay
+
 function training_data(n=512, font_size=10)
     n1 = n + ceil(Int, (1 + ℯ) * font_size)
     img = rand(Gray{Float64},n1,n1) ./ 2 .+ .5
