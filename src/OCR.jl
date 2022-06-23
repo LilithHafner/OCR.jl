@@ -5,7 +5,7 @@ using Images, StatsBase
 using BasicTextRender: overlaytext!
 using Random: shuffle
 
-export test_all, overlay
+export test_all, overlay, ci
 
 function training_data(n=512, font_size=10)
     n1 = n + ceil(Int, (1 + ℯ) * font_size)
@@ -224,7 +224,15 @@ end
 function test_all(epochs; show_img=true)
     time = @elapsed system = make_system(train(epochs)...)
     out = (;time, test_system(system; show_img)...)
-    map(x->round(1000x)/1000, out)
+    pretty(;out...)
 end
+
+pretty(;time, undetected, false_positive, doublecount) =
+    "time = $(round(10time)/10)s, \
+    undetected = $(lpad(round(Int, 100undetected), 2))%, \
+    false positive = $(lpad(round(Int, 100false_positive), 2))%, \
+    doublecount = $(lpad(round(Int, 100doublecount), 2))%"
+
+ci() = (println.([test_all(4) for _ in 1:4]); nothing)
 
 end # module
