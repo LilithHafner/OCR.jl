@@ -87,8 +87,9 @@ end
 
 function backward!(weights, history, grad)
     for i in reverse(eachindex(weights, history))
+        new_grad = grad * transpose(weights[i])
         weights[i] += transpose(history[i]) * grad
-        grad = grad * transpose(weights[i])
+        grad = new_grad
         grad[history[i] .== 0] .= 0
     end
     grad # gradient with respect to input
@@ -125,7 +126,7 @@ function epoch(network; coords, img, dist, window, train, window_length, batch_s
         push!(live, mean(hcat(history[begin+1:end]...) .> 0))
 
         if train
-            grad = 3e-3(target .- prediction)
+            grad = .02(target .- prediction)
             backward!(network, history, grad)
         end
     end
